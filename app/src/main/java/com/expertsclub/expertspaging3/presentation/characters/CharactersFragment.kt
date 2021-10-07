@@ -1,16 +1,13 @@
 package com.expertsclub.expertspaging3.presentation.characters
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.expertsclub.expertspaging3.R
-import com.expertsclub.expertspaging3.data.model.Character
 import com.expertsclub.expertspaging3.data.network.RetrofitService
-import com.expertsclub.expertspaging3.data.network.RickMortyApi
 import com.expertsclub.expertspaging3.data.repository.CharactersRepositoryImpl
 import com.expertsclub.expertspaging3.databinding.CharactersFragmentBinding
 import kotlinx.coroutines.flow.collectLatest

@@ -5,15 +5,20 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.paging.LoadState
 import com.expertsclub.expertspaging3.R
 import com.expertsclub.expertspaging3.data.model.Character
 import com.expertsclub.expertspaging3.data.network.RetrofitService
 import com.expertsclub.expertspaging3.data.network.RickMortyApi
 import com.expertsclub.expertspaging3.data.repository.CharactersRepositoryImpl
 import com.expertsclub.expertspaging3.databinding.CharactersFragmentBinding
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChangedBy
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.launch
 
 class CharactersFragment : Fragment() {
@@ -45,14 +50,50 @@ class CharactersFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        observeInitialLoadState()
         setRecyclerCharacters()
         loadCharacters()
+    }
+
+    private fun observeInitialLoadState() {
+        lifecycleScope.launch {
+            charactersAdapter.loadStateFlow.collectLatest { loadState ->
+                binding.flipperCharacters.displayedChild = when (loadState.refresh) {
+                    is LoadState.Loading -> {
+                        setShimmerVisibility(true)
+                        0
+                    }
+                    is LoadState.NotLoading -> {
+                        setShimmerVisibility(false)
+                        1
+                    }
+                    is LoadState.Error -> {
+                        setShimmerVisibility(false)
+                        binding.buttonRetry.setOnClickListener {
+                            charactersAdapter.refresh()
+                        }
+                        2
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setShimmerVisibility(visibility: Boolean) {
+        binding.shimmerCharacters.run {
+            isVisible = visibility
+            if (visibility) {
+                startShimmer()
+            } else stopShimmer()
+        }
     }
 
     private fun setRecyclerCharacters() {
         with(binding.recyclerCharacters) {
             setHasFixedSize(true)
-            adapter = charactersAdapter
+            adapter = charactersAdapter.withLoadStateFooter(
+                CharacterLoadStateAdapter(charactersAdapter::retry)
+            )
         }
     }
 

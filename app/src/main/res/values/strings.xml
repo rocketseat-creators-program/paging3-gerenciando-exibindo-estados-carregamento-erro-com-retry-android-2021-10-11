@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Experts Paging3</string>
+
+    <string name="generic_try_again">Try again</string>
+
     <string name="characters_title">Characters</string>
+    <string name="characters_loading_error">Error when trying to load data</string>
     <string name="characters_status_alive">Alive</string>
     <string name="characters_status_dead">Dead</string>
     <string name="characters_status_unknown">Unknown</string>

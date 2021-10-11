@@ -1,4 +1,4 @@
-                                                    <img src="https://storage.googleapis.com/golden-wind/experts-club/capa-github.svg" />
+<img src="https://storage.googleapis.com/golden-wind/experts-club/capa-github.svg" />
 
 # Gerenciando estados de carregamento e error com opção de retry com a biblioteca Paging3 no Android
 
